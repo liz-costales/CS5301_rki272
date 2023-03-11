@@ -17,7 +17,7 @@ public class DateTimeTransformation {
             convertedDateTime = ZonedDateTime.parse(givenDateTime, fmt);
 
         } catch (Exception e) {
-            System.out.println("The datetime or timezone string provided was invalid. Cannot convert " +
+            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
                     "string to datetime. Exception is: " + e);
             throw e;
         }
@@ -27,7 +27,7 @@ public class DateTimeTransformation {
     }
     public boolean isDateTimeValid(String givenDateTime)
     {
-        if(givenDateTime.length() == 19)
+        if(givenDateTime != null && givenDateTime.length() == 19)
         {
             try {
                 DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").parse(givenDateTime).toString();
@@ -44,7 +44,7 @@ public class DateTimeTransformation {
 
     public boolean isTimeZoneValid(String givenTimeZone)
     {
-        if(ZoneId.SHORT_IDS.containsKey(givenTimeZone))
+        if(givenTimeZone != null && ZoneId.SHORT_IDS.containsKey(givenTimeZone))
         {
             return true;
         }

@@ -23,6 +23,24 @@ public class DateTimeTransformationTest {
     }
 
     @Test
+    public void test_datetimeNull(){
+        String myDateTime = null;
+        String myTimeZone = "MST";
+
+        NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
+            dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
+        }, "NullPointerException was expected for invalid datetime format");    }
+
+    @Test
+    public void test_datetimeEmpty(){
+        String myDateTime = "";
+        String myTimeZone = "MST";
+
+        DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
+            dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
+        }, "DateTimeParseException was expected for invalid datetime format");    }
+
+    @Test
     public void test_datetimeNoSecondsInvalid(){
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "MST";
@@ -44,12 +62,30 @@ public class DateTimeTransformationTest {
 
     @Test
     public void test_datetimeFormatInvalid(){
-        String myDateTime = "02/13/2023 22:00";
+        String myDateTime = "02/13/2023 22:00:00";
         String myTimeZone = "MST";
 
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
             dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
         }, "DateTimeParseException was expected for invalid datetime format");    }
+
+    @Test
+    public void test_timezoneNull(){
+        String myDateTime = "02-02-2023 13:00:00";
+        String myTimeZone = null;
+
+        NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
+            dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
+        }, "NullPointerException was expected for invalid datetime format");    }
+
+    @Test
+    public void test_timezoneEmpty(){
+        String myDateTime = "02-02-2023 13:00:00";
+        String myTimeZone = "";
+
+        NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
+            dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
+        }, "NullPointerException was expected for invalid datetime format");    }
 
     @Test
     public void test_datetimeTimeZoneInvalid() {
