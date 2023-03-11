@@ -1,3 +1,6 @@
+import controller.DateTimeTransformation;
+
+import java.time.ZonedDateTime;
 import java.util.Scanner;
 
 public class Main {
@@ -15,8 +18,21 @@ public class Main {
 
         String givenTimeZone = myObj.nextLine();
 
-        //For validation TODO: Remove these sysouts
-        System.out.println("The datetime string is: " + givenDateTime);
-        System.out.println("The timezone string is: " + givenTimeZone);
+        DateTimeTransformation dtt = new DateTimeTransformation();
+
+        System.out.println("The given datetime string is: " + givenDateTime + " with timezone UTC.");
+        System.out.println("The given timezone to convert to is: " + givenTimeZone);
+        ZonedDateTime convertedDateTime = null;
+
+        try
+        {
+             convertedDateTime = dtt.getConvertedDateTime(givenDateTime, givenTimeZone);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Exception thrown: " + e);
+        }
+
+        System.out.println("The converted datetime is: " + convertedDateTime);
     }
 }
