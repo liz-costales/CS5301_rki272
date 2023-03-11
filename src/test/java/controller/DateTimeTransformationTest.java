@@ -23,21 +23,23 @@ public class DateTimeTransformationTest {
     }
 
     @Test
-    public void test_datetimeNoSecondsValid() throws Exception{
+    public void test_datetimeNoSecondsInvalid(){
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "MST";
-        ZonedDateTime convertedDateTime = dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
 
-        Assertions.assertNotNull(convertedDateTime);
-        Assertions.assertEquals(TimeZone.getTimeZone(myTimeZone).toZoneId(), convertedDateTime.getZone());
+        DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
+            dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
+        }, "DateTimeParseException was expected for invalid datetime format");
     }
 
     @Test
-    public void test_datetimeNoMinutesInvalid() throws Exception{
+    public void test_datetimeNoMinutesInvalid(){
         String myDateTime = "02-02-2023 13::00";
         String myTimeZone = "MST";
 
-        Assertions.assertNull(dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone));
+        DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
+            dateTimeTransformation.getConvertedDateTime(myDateTime, myTimeZone);
+        }, "DateTimeParseException was expected for invalid datetime format");
     }
 
     @Test

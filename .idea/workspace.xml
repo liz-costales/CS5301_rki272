@@ -6,13 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="792230d8-717e-481c-908a-6e8ff9621a65" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/controller/DateTimeTransformation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controller/DateTimeTransformation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controller/TimeZoneTransformation.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/representation/TimeZones.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/DateTimeTransformationTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/controller/DateTimeTransformationTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/TimeZoneTransformationTest.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
