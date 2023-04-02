@@ -56,7 +56,7 @@ public class DateTimeTransformation {
         String myUTCDateTimeString;
 
         try {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of(ZoneId.SHORT_IDS.get("UTC")));
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of("UTC"));
             utcDateTime = ZonedDateTime.parse(givenDateTime, fmt);
         } catch (Exception e) {
             System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
@@ -72,7 +72,7 @@ public class DateTimeTransformation {
         String myUTCDateTimeString;
 
         try {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of(ZoneId.SHORT_IDS.get("UTC")));
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of("UTC"));
             myUTCDateTimeString = fmt.format(getUTCDateTime(givenDateTime));
         } catch (Exception e) {
             System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
@@ -88,7 +88,7 @@ public class DateTimeTransformation {
         String myNewDateTimeString;
 
         try {
-            DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(givenTimeZone));
+            DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(ZoneId.SHORT_IDS.get(givenTimeZone)));
             ZonedDateTime zdt = getUTCDateTime(givenDateTime);
             myNewDateTimeString = dowFmt.format(zdt);
 
