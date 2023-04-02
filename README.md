@@ -33,7 +33,7 @@ EST
 The given timezone to convert to is: EST
 ```
 ```
-The given datetime in UTC is: 04-05-1987 16:45
-The converted datetime in EST is: Sunday 04-05-1987 11:45
+The given datetime in UTC is: 04-02-2023 16:45
+The converted datetime in EST is: Sunday 04-02-2023 11:45
 ```
 Invalid entries will result in an error message being returned.
