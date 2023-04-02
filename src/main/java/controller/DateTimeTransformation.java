@@ -24,12 +24,13 @@ public class DateTimeTransformation {
 
         return myTimes;
     }
+
     public boolean isDateTimeValid(String givenDateTime)
     {
-        if(givenDateTime != null && givenDateTime.length() == 19)
+        if(givenDateTime != null && givenDateTime.length() == 16)
         {
             try {
-                DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm").parse(givenDateTime).toString();
+                DateTimeFormatter.ofPattern(DATE_FORMAT).parse(givenDateTime).toString();
                 return true;
             }
             catch (DateTimeParseException e) {
@@ -50,10 +51,9 @@ public class DateTimeTransformation {
         return false;
     }
 
-    private ZonedDateTime getUTCDateTime (String givenDateTime)
+    ZonedDateTime getUTCDateTime (String givenDateTime)
     {
         ZonedDateTime utcDateTime;
-        String myUTCDateTimeString;
 
         try {
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of("UTC"));
@@ -67,7 +67,7 @@ public class DateTimeTransformation {
         return utcDateTime;
     }
 
-    private String getUTCDateTimeString(String givenDateTime)
+    String getUTCDateTimeString(String givenDateTime)
     {
         String myUTCDateTimeString;
 
@@ -83,7 +83,7 @@ public class DateTimeTransformation {
         return myUTCDateTimeString;
     }
 
-    private String getConvertedDateTimeString (String givenDateTime, String givenTimeZone)
+    String getConvertedDateTimeString (String givenDateTime, String givenTimeZone)
     {
         String myNewDateTimeString;
 
