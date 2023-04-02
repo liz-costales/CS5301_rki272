@@ -4,37 +4,32 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DateTimeTransformation {
 
-    public ZonedDateTime getConvertedDateTime(String givenDateTime, String givenTimeZone) throws Exception {
+    private static final String DATE_FORMAT = "MM-dd-yyyy HH:mm";
+    private static final String DATE_FORMAT_DOW = "EEEE MM-dd-yyyy HH:mm";
 
-        ZonedDateTime convertedDateTime;
+
+    public Map<String, String> getTimes(String givenDateTime, String givenTimeZone) throws Exception {
+
         String timeZone = ZoneId.SHORT_IDS.get(givenTimeZone);
-        String convertedDateTime2;
+        Map<String, String> myTimes = new HashMap<>();
+        String utcDateTime = getUTCDateTimeString(givenDateTime);
 
-        try {
-            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").withZone(ZoneId.of(timeZone));
-            convertedDateTime = ZonedDateTime.parse(givenDateTime, fmt);
-            DateTimeFormatter fmt2 = DateTimeFormatter.ofPattern("EEEE MM-dd-yyyy HH:mm:ss").withZone(ZoneId.of(timeZone));
-            convertedDateTime2 = convertedDateTime.format(fmt2);
+        myTimes.put("given", getUTCDateTimeString(givenDateTime));
+        myTimes.put("converted", getConvertedDateTimeString(utcDateTime, givenTimeZone));
 
-            System.out.println("Date with DOW is: " + convertedDateTime2);
-
-        } catch (Exception e) {
-            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
-                    "string to datetime. Exception is: " + e);
-            throw e;
-        }
-
-         return convertedDateTime;
+        return myTimes;
     }
     public boolean isDateTimeValid(String givenDateTime)
     {
         if(givenDateTime != null && givenDateTime.length() == 19)
         {
             try {
-                DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss").parse(givenDateTime).toString();
+                DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm").parse(givenDateTime).toString();
                 return true;
             }
             catch (DateTimeParseException e) {
@@ -53,5 +48,56 @@ public class DateTimeTransformation {
             return true;
         }
         return false;
+    }
+
+    private ZonedDateTime getUTCDateTime (String givenDateTime)
+    {
+        ZonedDateTime utcDateTime;
+        String myUTCDateTimeString;
+
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of(ZoneId.SHORT_IDS.get("UTC")));
+            utcDateTime = ZonedDateTime.parse(givenDateTime, fmt);
+        } catch (Exception e) {
+            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
+                    "string to datetime. Exception is: " + e);
+            throw e;
+        }
+
+        return utcDateTime;
+    }
+
+    private String getUTCDateTimeString(String givenDateTime)
+    {
+        String myUTCDateTimeString;
+
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of(ZoneId.SHORT_IDS.get("UTC")));
+            myUTCDateTimeString = fmt.format(getUTCDateTime(givenDateTime));
+        } catch (Exception e) {
+            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
+                    "string to datetime. Exception is: " + e);
+            throw e;
+        }
+
+        return myUTCDateTimeString;
+    }
+
+    private String getConvertedDateTimeString (String givenDateTime, String givenTimeZone)
+    {
+        String myNewDateTimeString;
+
+        try {
+            DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(givenTimeZone));
+            ZonedDateTime zdt = getUTCDateTime(givenDateTime);
+            myNewDateTimeString = dowFmt.format(zdt);
+
+        } catch (Exception e) {
+            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
+                    "string to datetime. Exception is: " + e);
+            throw e;
+        }
+
+        return myNewDateTimeString;
     }
 }

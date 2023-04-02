@@ -1,15 +1,14 @@
 import controller.DateTimeTransformation;
 
-import java.time.ZonedDateTime;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         Scanner myObj = new Scanner(System.in);
 
-        System.out.println("Please enter a datetime string in the format of \"MM-DD-YYYY HH24:MI:SS\", " +
-                "where MM is the month, DD is the day, YYYY is the 4-digit year, HH24 is the hour in a 24-hour clock, " +
-                "MI is the minutes, and SS is seconds: ");
+        System.out.println("Please enter a datetime string in the format of \"MM-DD-YYYY HH24:MI\", " +
+                "where MM is the month, DD is the day, YYYY is the 4-digit year, HH24 is the hour in a 24-hour clock " +
+                "and MI is the minutes: ");
         String givenDateTime = myObj.nextLine();
 
         DateTimeTransformation dtt = new DateTimeTransformation();
@@ -25,17 +24,18 @@ public class Main {
             if(dtt.isTimeZoneValid(givenTimeZone))
             {
                 System.out.println("The given timezone to convert to is: " + givenTimeZone);
-                ZonedDateTime convertedDateTime = null;
+                Map<String, String> myTimes = new HashMap<>();
 
                 try
                 {
-                    convertedDateTime = dtt.getConvertedDateTime(givenDateTime, givenTimeZone);
+                    myTimes = dtt.getTimes(givenDateTime, givenTimeZone);
                 }
                 catch (Exception e)
                 {
                     System.out.println("Exception thrown: " + e);
                 }
-                System.out.println("The converted datetime is: " + convertedDateTime);
+                System.out.println("The given datetime in UTC is: " + myTimes.get("given"));
+                System.out.println("The converted datetime in " + givenTimeZone + " is: " + myTimes.get("converted"));
             }
             else {
                 System.out.println("**********************************************");
