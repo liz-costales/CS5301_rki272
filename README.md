@@ -16,6 +16,6 @@ How to run:
 
 ```./gradlew -PmainClass=Main run```
 
-Then input in your date in the correct format of "MM-DD-YYYY HH24:MI"", press enter.
+Then input in your date in the correct format of "MM-DD-YYYY HH24:MI", press enter.
 
 Then input in the timezone in 3-digit format (i.e. CST/MST/etc, and hit enter.
