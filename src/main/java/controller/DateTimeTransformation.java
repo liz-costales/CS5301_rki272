@@ -1,5 +1,6 @@
 package controller;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -13,14 +14,14 @@ public class DateTimeTransformation {
     private static final String DATE_FORMAT_DOW = "EEEE MM-dd-yyyy HH:mm";
 
 
-    public Map<String, String> getTimes(String givenDateTime, String givenTimeZone, String considerDaylightSavings) throws Exception {
+    public Map<String, String> getTimes(String givenDateTime, String givenTimeZone, String considerDS) throws Exception {
 
         String timeZone = ZoneId.SHORT_IDS.get(givenTimeZone);
         Map<String, String> myTimes = new HashMap<>();
         String utcDateTime = getUTCDateTimeString(givenDateTime);
 
         myTimes.put("given", getUTCDateTimeString(givenDateTime));
-        myTimes.put("converted", getConvertedDateTimeString(utcDateTime, givenTimeZone, considerDaylightSavings));
+        myTimes.put("converted", getConvertedDateTimeString(utcDateTime, givenTimeZone, considerDS));
 
         return myTimes;
     }
@@ -51,7 +52,7 @@ public class DateTimeTransformation {
         return false;
     }
 
-    ZonedDateTime getUTCDateTime (String givenDateTime)
+    ZonedDateTime getUTCZonedDateTime (String givenDateTime)
     {
         ZonedDateTime utcDateTime;
 
@@ -67,13 +68,29 @@ public class DateTimeTransformation {
         return utcDateTime;
     }
 
+    LocalDateTime getUTCLocalDateTime (String givenDateTime)
+    {
+        LocalDateTime utcDateTime;
+
+        try {
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of("UTC"));
+            utcDateTime = LocalDateTime.parse(givenDateTime, fmt);
+        } catch (Exception e) {
+            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
+                    "string to datetime. Exception is: " + e);
+            throw e;
+        }
+
+        return utcDateTime;
+    }
+
     String getUTCDateTimeString(String givenDateTime)
     {
         String myUTCDateTimeString;
 
         try {
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT).withZone(ZoneId.of("UTC"));
-            myUTCDateTimeString = fmt.format(getUTCDateTime(givenDateTime));
+            myUTCDateTimeString = fmt.format(getUTCZonedDateTime(givenDateTime));
         } catch (Exception e) {
             System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
                     "string to datetime. Exception is: " + e);
@@ -83,17 +100,31 @@ public class DateTimeTransformation {
         return myUTCDateTimeString;
     }
 
-    String getConvertedDateTimeString (String givenDateTime, String givenTimeZone)
-    {
+    String getConvertedDateTimeString (String givenDateTime, String givenTimeZone, String considerDS) throws Exception {
         String myNewDateTimeString;
 
         try {
-            DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(ZoneId.SHORT_IDS.get(givenTimeZone)));
-            ZonedDateTime zdt = getUTCDateTime(givenDateTime);
-            myNewDateTimeString = dowFmt.format(zdt);
 
+            if(considerDaylightSavings(considerDS).equals(Boolean.TRUE))
+            {
+                //Zoned date time considers daylight savings by default
+                DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(ZoneId.SHORT_IDS.get(givenTimeZone)));
+                ZonedDateTime zdt = getUTCZonedDateTime(givenDateTime);
+                myNewDateTimeString = dowFmt.format(zdt);
+            }
+            else if(considerDaylightSavings(considerDS).equals(Boolean.FALSE))
+            {
+                //Local date time does not consider daylight savings time
+                DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(ZoneId.SHORT_IDS.get(givenTimeZone)));
+                LocalDateTime ldt = getUTCLocalDateTime(givenDateTime);
+                myNewDateTimeString = dowFmt.format(ldt);
+            }
+            else
+            {
+                return null;
+            }
         } catch (Exception e) {
-            System.out.println("The datetime or timezone string provided was null or invalid. Cannot convert " +
+            System.out.println("The datetime, timezone, or daylight savings string provided was null or invalid. Cannot convert " +
                     "string to datetime. Exception is: " + e);
             throw e;
         }
@@ -101,15 +132,18 @@ public class DateTimeTransformation {
         return myNewDateTimeString;
     }
 
-    boolean considerDaylightSavings (String userInput)
+    Boolean considerDaylightSavings (String userInput) throws Exception
     {
-        if (userInput.equalsIgnoreCase("yes"))
+        if(userInput.equalsIgnoreCase("yes"))
         {
             return true;
         }
-        else
+        else if(userInput.equalsIgnoreCase("no"))
         {
             return false;
         }
+
+        throw new Exception("Invalid entry for consideration of Daylight Savings Time. The value should be " +
+                "\"YES\" or \"NO\"");
     }
 }

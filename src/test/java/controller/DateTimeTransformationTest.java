@@ -3,6 +3,7 @@ package controller;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -17,7 +18,8 @@ public class DateTimeTransformationTest {
     public void test_happyPath() throws Exception {
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "CST";
-        Map<String, String> myTimes = dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+        String considerDS = "No";
+        Map<String, String> myTimes = dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         String myUTCTime = myTimes.get("given");
         String myConvertedTime = myTimes.get("converted");
 
@@ -32,7 +34,8 @@ public class DateTimeTransformationTest {
     public void test_happyPath2() throws Exception {
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "HST";
-        Map<String, String> myTimes = dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+        String considerDS = "No";
+        Map<String, String> myTimes = dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         String myUTCTime = myTimes.get("given");
         String myConvertedTime = myTimes.get("converted");
 
@@ -47,7 +50,8 @@ public class DateTimeTransformationTest {
     public void test_happyPath_NextDay() throws Exception {
         String myDateTime = "02-02-2023 22:00";
         String myTimeZone = "JST";
-        Map<String, String> myTimes = dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+        String considerDS = "No";
+        Map<String, String> myTimes = dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         String myUTCTime = myTimes.get("given");
         String myConvertedTime = myTimes.get("converted");
 
@@ -63,9 +67,9 @@ public class DateTimeTransformationTest {
     public void test_datetimeNull() {
         String myDateTime = null;
         String myTimeZone = "MST";
-
+        String considerDS = "Yes";
         NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone,considerDS);
         }, "NullPointerException was expected for invalid datetime format");
     }
 
@@ -73,9 +77,9 @@ public class DateTimeTransformationTest {
     public void test_datetimeEmpty(){
         String myDateTime = "";
         String myTimeZone = "MST";
-
+        String considerDS = "Yes";
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");
     }
 
@@ -83,9 +87,9 @@ public class DateTimeTransformationTest {
     public void test_datetimeWithSecondsInvalid(){
         String myDateTime = "02-02-2023 13:00:00";
         String myTimeZone = "MST";
-
+        String considerDS = "No";
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");
     }
 
@@ -93,9 +97,9 @@ public class DateTimeTransformationTest {
     public void test_datetimeNoMinutesInvalid(){
         String myDateTime = "02-02-2023 13::00";
         String myTimeZone = "MST";
-
+        String considerDS = "Yes";
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");
     }
 
@@ -103,36 +107,36 @@ public class DateTimeTransformationTest {
     public void test_datetimeFormatInvalid(){
         String myDateTime = "02/13/2023 22:00:00";
         String myTimeZone = "MST";
-
+        String considerDS = "no";
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");    }
 
     @Test
     public void test_timezoneNull(){
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = null;
-
+        String considerDS = "Yes";
         NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "NullPointerException was expected for invalid datetime format");    }
 
     @Test
     public void test_timezoneEmpty(){
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "";
-
+        String considerDS = "Yes";
         NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "NullPointerException was expected for invalid datetime format");    }
 
     @Test
     public void test_datetimeTimeZoneInvalid() {
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "ABC";
-
+        String considerDS = "Yes";
         NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "NullPointerException was expected for invalid timezone format");
     }
 
@@ -140,9 +144,10 @@ public class DateTimeTransformationTest {
     public void test_datetimeTimeZoneFormatInvalid() {
         String myDateTime = "02-02-2023 13:00";
         String myTimeZone = "World";
+        String considerDS = "Yes";
 
         NullPointerException thrown = Assertions.assertThrows(NullPointerException.class, () -> {
-            dateTimeTransformation.getTimes(myDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(myDateTime, myTimeZone, considerDS);
         }, "NullPointerException was expected for invalid timezone format longer than 3 characters");
     }
 
@@ -187,26 +192,44 @@ public class DateTimeTransformationTest {
     }
 
     @Test
-    public void test_getUTCDateTime_HappyPath() {
+    public void test_getUTCZonedDateTime_HappyPath() {
         String givenDateTime = "03-21-2023 13:00";
         String expectedUTCZone = "UTC";
+        String considerDS = "Yes";
+
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm").withZone(ZoneId.of(expectedUTCZone));
         ZonedDateTime expectedUTCTime = ZonedDateTime.parse("03-21-2023 13:00", fmt);
 
-        Assertions.assertEquals(expectedUTCTime, dateTimeTransformation.getUTCDateTime(givenDateTime));
-        Assertions.assertEquals(expectedUTCZone, dateTimeTransformation.getUTCDateTime(givenDateTime).getZone().getId());
+        Assertions.assertEquals(expectedUTCTime, dateTimeTransformation.getUTCZonedDateTime(givenDateTime));
+        Assertions.assertEquals(expectedUTCZone, dateTimeTransformation.getUTCZonedDateTime(givenDateTime).getZone().getId());
     }
 
     @Test
-    public void test_getUTCDateTime_Fails() {
+    public void test_getUTCZonedDateTime_Fails() {
         String givenDateTime = "03-21-2023 13:00";
         String unexpectedUTCZone = "CST";
         String expectedUTCZone = "UTC";
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm").withZone(ZoneId.of(ZoneId.SHORT_IDS.get(unexpectedUTCZone)));
         ZonedDateTime expectedUTCTime = ZonedDateTime.parse("03-21-2023 13:00", fmt);
 
-        Assertions.assertNotEquals(unexpectedUTCZone, dateTimeTransformation.getUTCDateTime(givenDateTime).getZone().getId());
-        Assertions.assertEquals(expectedUTCZone, dateTimeTransformation.getUTCDateTime(givenDateTime).getZone().getId());
+        Assertions.assertNotEquals(unexpectedUTCZone, dateTimeTransformation.getUTCZonedDateTime(givenDateTime).getZone().getId());
+        Assertions.assertEquals(expectedUTCZone, dateTimeTransformation.getUTCZonedDateTime(givenDateTime).getZone().getId());
+    }
+
+    @Test
+    public void test_getUTCLocalDateTime_HappyPath() {
+        String givenDateTime = "06-21-2023 13:00";
+        String expectedUTCZone = "UTC";
+        String considerDS = "No";
+
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm").withZone(ZoneId.of(expectedUTCZone));
+        LocalDateTime expectedUTCTime = LocalDateTime.parse("06-21-2023 13:00", fmt);
+
+        Assertions.assertEquals(expectedUTCTime, dateTimeTransformation.getUTCLocalDateTime(givenDateTime));
+
+        String givenDateTime2 = "01-21-2023 13:00";
+        LocalDateTime expectedUTCTime2 = LocalDateTime.parse("01-21-2023 13:00", fmt);
+        Assertions.assertEquals(expectedUTCTime2, dateTimeTransformation.getUTCLocalDateTime(givenDateTime2));
     }
 
     @Test
@@ -221,28 +244,39 @@ public class DateTimeTransformationTest {
     public void test_getUTCDateTimeString_Fails() {
         String givenDateTime = "03-21-2023 13:00:00";
         String myTimeZone = "CST";
-
+        String considerDS = "No";
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
-            dateTimeTransformation.getTimes(givenDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(givenDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");
     }
 
     @Test
-    public void test_getConvertedDateTimeString_HappyPath() {
+    public void test_getConvertedDateTimeString_NoDaylightSavings_HappyPath() throws Exception {
         String givenDateTime = "03-21-2023 13:00";
         String givenTimeZone = "CST";
+        String considerDS = "NO";
 
-       Assertions.assertEquals("Tuesday 03-21-2023 08:00",
-               dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone));
+       Assertions.assertEquals("Tuesday 03-21-2023 13:00",
+               dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone,considerDS));
+    }
+
+    @Test
+    public void test_getConvertedDateTimeString_YesDaylightSavings_HappyPath() throws Exception {
+        String givenDateTime = "03-21-2023 13:00";
+        String givenTimeZone = "CST";
+        String considerDS = "Yes";
+
+        Assertions.assertEquals("Tuesday 03-21-2023 08:00",
+                dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone,considerDS));
     }
 
     @Test
     public void test_getConvertedDateTimeString_Fails() {
         String givenDateTime = "03-21-2023 13:00:00";
         String myTimeZone = "CST";
-
+        String considerDS = "No";
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
-            dateTimeTransformation.getTimes(givenDateTime, myTimeZone);
+            dateTimeTransformation.getTimes(givenDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");
     }
 }
