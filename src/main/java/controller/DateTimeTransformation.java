@@ -115,9 +115,14 @@ public class DateTimeTransformation {
             else if(considerDaylightSavings(considerDS).equals(Boolean.FALSE))
             {
                 //Local date time does not consider daylight savings time
+                DateTimeFormatter fmt = DateTimeFormatter.ofPattern(DATE_FORMAT);
                 DateTimeFormatter dowFmt = DateTimeFormatter.ofPattern(DATE_FORMAT_DOW).withZone(ZoneId.of(ZoneId.SHORT_IDS.get(givenTimeZone)));
-                LocalDateTime ldt = getUTCLocalDateTime(givenDateTime);
-                myNewDateTimeString = dowFmt.format(ldt);
+
+                LocalDateTime oldDateTime = LocalDateTime.parse(givenDateTime, fmt);
+                ZoneId oldZone = ZoneId.of("UTC");
+                ZoneId newZone = ZoneId.of(ZoneId.SHORT_IDS.get(givenTimeZone));
+                LocalDateTime newDateTime = oldDateTime.atZone(oldZone).withZoneSameInstant(newZone).toLocalDateTime();
+                myNewDateTimeString = dowFmt.format(newDateTime);
             }
             else
             {

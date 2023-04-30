@@ -256,18 +256,44 @@ public class DateTimeTransformationTest {
         String givenTimeZone = "CST";
         String considerDS = "NO";
 
-       Assertions.assertEquals("Tuesday 03-21-2023 13:00",
+       Assertions.assertEquals("Tuesday 03-21-2023 08:00",
                dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone,considerDS));
     }
 
     @Test
     public void test_getConvertedDateTimeString_YesDaylightSavings_HappyPath() throws Exception {
-        String givenDateTime = "03-21-2023 13:00";
-        String givenTimeZone = "CST";
         String considerDS = "Yes";
 
-        Assertions.assertEquals("Tuesday 03-21-2023 08:00",
+        //This test will show the difference between when daylight savings is active vs not.
+        //In January the difference with UTC is -5 during DST and -6 during Standard Time.
+
+        //Standard time, DST not active
+        String givenDateTime = "01-21-2023 13:00";
+        String givenTimeZone = "CST";
+        Assertions.assertEquals("Saturday 01-21-2023 07:00",
                 dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone,considerDS));
+
+        //Daylight Savings time active
+        String givenDateTime2 = "06-21-2023 13:00";
+        String givenTimeZone2 = "CST";
+        Assertions.assertEquals("Wednesday 06-21-2023 08:00",
+                dateTimeTransformation.getConvertedDateTimeString(givenDateTime2,givenTimeZone2,considerDS));
+    }
+
+    @Test
+    public void test_daylightSavings_NoDaylightSavings_HappyPath() throws Exception {
+        //This test will show the difference between when daylight savings is chosen vs when
+        // the user chooses not to consider daylight savings
+        String givenDateTime = "06-21-2023 13:00";
+        String givenTimeZone = "CST";
+
+        String considerDS = "Yes";
+        Assertions.assertEquals("Wednesday 06-21-2023 08:00",
+                dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone,considerDS));
+
+        String considerDS2 = "No";
+        Assertions.assertEquals("Wednesday 06-21-2023 08:00",
+                dateTimeTransformation.getConvertedDateTimeString(givenDateTime,givenTimeZone,considerDS2));
     }
 
     @Test
@@ -278,5 +304,31 @@ public class DateTimeTransformationTest {
         DateTimeParseException thrown = Assertions.assertThrows(DateTimeParseException.class, () -> {
             dateTimeTransformation.getTimes(givenDateTime, myTimeZone, considerDS);
         }, "DateTimeParseException was expected for invalid datetime format");
+    }
+
+    @Test
+    public void test_considerDaylightSavings_True() throws Exception
+    {
+        String userInput = "yes";
+
+        Assertions.assertTrue(dateTimeTransformation.considerDaylightSavings(userInput));
+    }
+
+    @Test
+    public void test_considerDaylightSavings_False() throws Exception
+    {
+        String userInput = "NO";
+
+        Assertions.assertFalse(dateTimeTransformation.considerDaylightSavings(userInput));
+    }
+
+    @Test
+    public void test_considerDaylightSavings_Invalid() throws Exception
+    {
+        String userInput = "Something";
+
+        Exception thrown = Assertions.assertThrows(Exception.class, () -> {
+            dateTimeTransformation.considerDaylightSavings(userInput);
+        }, "Exception was expected for invalid daylight savings time string.");
     }
 }
