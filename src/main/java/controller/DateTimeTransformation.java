@@ -13,14 +13,14 @@ public class DateTimeTransformation {
     private static final String DATE_FORMAT_DOW = "EEEE MM-dd-yyyy HH:mm";
 
 
-    public Map<String, String> getTimes(String givenDateTime, String givenTimeZone) throws Exception {
+    public Map<String, String> getTimes(String givenDateTime, String givenTimeZone, String considerDaylightSavings) throws Exception {
 
         String timeZone = ZoneId.SHORT_IDS.get(givenTimeZone);
         Map<String, String> myTimes = new HashMap<>();
         String utcDateTime = getUTCDateTimeString(givenDateTime);
 
         myTimes.put("given", getUTCDateTimeString(givenDateTime));
-        myTimes.put("converted", getConvertedDateTimeString(utcDateTime, givenTimeZone));
+        myTimes.put("converted", getConvertedDateTimeString(utcDateTime, givenTimeZone, considerDaylightSavings));
 
         return myTimes;
     }
@@ -99,5 +99,17 @@ public class DateTimeTransformation {
         }
 
         return myNewDateTimeString;
+    }
+
+    boolean considerDaylightSavings (String userInput)
+    {
+        if (userInput.equalsIgnoreCase("yes"))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }

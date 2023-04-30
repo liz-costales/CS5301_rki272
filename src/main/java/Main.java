@@ -6,6 +6,9 @@ public class Main {
     public static void main(String[] args) {
         Scanner myObj = new Scanner(System.in);
 
+        System.out.println("Do you want to consider daylight savings time in your date conversion? Please type \"yes\" or \"no\": ");
+        String considerDaylightSavings = myObj.nextLine();
+
         System.out.println("Please enter a datetime string in the format of \"MM-DD-YYYY HH24:MI\", " +
                 "where MM is the month, DD is the day, YYYY is the 4-digit year, HH24 is the hour in a 24-hour clock " +
                 "and MI is the minutes: ");
@@ -28,7 +31,7 @@ public class Main {
 
                 try
                 {
-                    myTimes = dtt.getTimes(givenDateTime, givenTimeZone);
+                    myTimes = dtt.getTimes(givenDateTime, givenTimeZone, considerDaylightSavings);
                 }
                 catch (Exception e)
                 {
